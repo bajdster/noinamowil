@@ -30,7 +30,7 @@ export default function RootLayout() {
         title: 'Drinks',
         headerShown:false,
         tabBarIcon: ({color, focused}) => (
-          <MaterialIcons name="local-drink" size={24} color="black" />
+          <MaterialIcons name="local-drink" size={24} color={color   } />
         )
       }}
     />

@@ -30,6 +30,7 @@ const DrinkSlider = () => {
 
     return (
         <View style={{ flex: 1, justifyContent:'center', alignItems:'center', marginTop:12 }}>
+            <Text style={styles.title}>Propozycje</Text>
             <Carousel
                 loop
                 width={width}
@@ -37,7 +38,7 @@ const DrinkSlider = () => {
                 autoPlay={true}
                 data={drinks}
                 scrollAnimationDuration={1000}
-                onSnapToItem={(index) => console.log('current index:', index)}
+                // onSnapToItem={(index) => console.log('current index:', index)}
                 renderItem={({ item }) => (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
                         <Image source={item.image} style={{ width: 150, height: 200 }} />
@@ -52,6 +53,13 @@ const DrinkSlider = () => {
 export default DrinkSlider;
 
 const styles = StyleSheet.create({
+    title:{
+        fontSize:20,
+        fontWeight:'bold',
+        alignSelf:'flex-start',
+        paddingLeft:20,
+        marginBottom:10
+    },
     drinkNameText:
     {
         fontWeight:'bold',
