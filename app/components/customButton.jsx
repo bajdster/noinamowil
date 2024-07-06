@@ -20,12 +20,10 @@ export default CustomButton
 
 const styles = StyleSheet.create({
     buttonContainer:{
-        // width:'80%',
         height:48,
-        // borderWidth:3,
         borderRadius:40,
-        // borderColor:'#a56cc1',
-        backgroundColor:"white",
+        width:'80%',
+        backgroundColor:"#00a6f9",
         marginVertical:16,
         alignItems:'center',
         justifyContent:'center',
@@ -33,7 +31,7 @@ const styles = StyleSheet.create({
     },
     buttonText:
     {
-       color: 'black',
+       color: 'white',
        fontSize:18,
        textTransform:'uppercase',
        fontWeight:'bold',

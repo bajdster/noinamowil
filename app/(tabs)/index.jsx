@@ -1,26 +1,34 @@
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native'
 import React from 'react'
 import DrinkSlider from '../components/drinkSlider'
-// import {Carousel} from "react-native-snap-carousel"
 import { useFonts, Bangers_400Regular } from '@expo-google-fonts/bangers';
-import { Link } from 'expo-router';
 import CustomButton from '../components/customButton';
+import CategoriesSlider from '../components/categoriesSlider';
 
 const Home = () => {
 
   let [fontsLoaded] = useFonts({
     Bangers_400Regular,
   });
+
+  if (!fontsLoaded) {
+    return null; // Możesz dodać wskaźnik ładowania tutaj
+  }
+
   return (
-    <ScrollView style={styles.mainContainer} contentContainerStyle={{justifyContent:"center", alignItems:"center"}}>
-    <Image source={require("../../assets/images/maintheme3.png")} style={styles.mainBanner}/>
+    <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
+      <DrinkSlider />
+      <CategoriesSlider />
       <View style={styles.welcomeTextContainer}>
-        <Text style={styles.welcomeText}>Dowiedź się jak w prosty sposób przygotowywać drinki jak <Text style={styles.highlight}>prawdziwy barman</Text></Text>
-        <Image source={require("../../assets/images/drink.png")} style={styles.drinkImage}/>
-        <CustomButton title="Znajdź przepisy"/>
+        <View style={styles.coctailMenu}>
+          <ImageBackground source={require("../../assets/images/maintheme3.png")} style={styles.backgroundImage}>
+            <Text style={styles.welcomeText}>
+              Dowiedź się jak w prosty sposób przygotowywać drinki jak prawdziwy barman
+            </Text>
+          </ImageBackground>
+          <CustomButton title="Znajdź przepisy" />
+        </View>
       </View>
-  
-      <DrinkSlider/>
     </ScrollView>
   )
 }
@@ -28,44 +36,40 @@ const Home = () => {
 export default Home
 
 const styles = StyleSheet.create({
-  mainContainer:
-  {
+  mainContainer: {
     flex: 1,
-    // paddingHorizontal: 36,
   },
-  welcomeTextContainer:
-  { 
-    height:200,
-    width:'90%',
+  coctailMenu: {
+    width: '100%',
     alignItems:'center',
     justifyContent:'center',
-    backgroundColor:'#cbbcf6',
-    marginTop:24,
-    marginBottom:24,
-    borderRadius:12,
-    paddingHorizontal:6
+    marginTop:10
   },
-  welcomeText:{
-    fontSize:22,
-    textAlign:'center',
+  backgroundImage: {
+    width: '100%',
+    height: 180,
+    resizeMode: 'cover',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  welcomeTextContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  welcomeText: {
+    fontSize: 22,
+    textAlign: 'center',
     fontFamily: 'Bangers_400Regular',
-    color:'#00a6f9'
+    color: 'white',
+    position: 'absolute',
+    bottom: 20,
+    width: '80%',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10
   },
-  highlight:{
-    color: 'white'
-  },
-  mainBanner:{
-    width:'100%',
-    height:300,
-    marginTop:20,
-  },
-  drinkImage:{
-    width:100,
-    height:100,
-    right:8,
-    bottom:40,
-    zIndex:-10,
-    position:'absolute',
-    resizeMode:'contain'
-  }
-})
+});

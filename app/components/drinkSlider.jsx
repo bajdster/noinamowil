@@ -29,8 +29,8 @@ const DrinkSlider = () => {
     const width = Dimensions.get('window').width;
 
     return (
-        <View style={{ flex: 1, justifyContent:'center', alignItems:'center', marginTop:12 }}>
-            <Text style={styles.title}>Propozycje</Text>
+        <View style={{ flex: 1, justifyContent:'center', alignItems:'center', marginTop:12, marginBottom:20 }}>
+            <Text style={styles.title}>Propozycje dla Ciebie</Text>
             <Carousel
                 loop
                 width={width}
@@ -38,9 +38,12 @@ const DrinkSlider = () => {
                 autoPlay={true}
                 data={drinks}
                 scrollAnimationDuration={1000}
+                panGestureHandlerProps={{
+                activeOffsetX: [-10, 10],
+                }}
                 // onSnapToItem={(index) => console.log('current index:', index)}
                 renderItem={({ item }) => (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width:'100%' }}>
                         <Image source={item.image} style={{ width: 150, height: 200 }} />
                         <Text style={styles.drinkNameText}>{item.name}</Text>
                     </View>

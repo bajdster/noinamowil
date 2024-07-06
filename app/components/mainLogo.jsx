@@ -14,6 +14,7 @@ export default MainLogo
 const styles = StyleSheet.create({
     logoContainer:{
         paddingTop:64,
+        marginBottom:12,
         height:96,
         width:'100%',
         alignItems:'center',
