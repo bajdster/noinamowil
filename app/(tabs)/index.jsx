@@ -4,6 +4,8 @@ import DrinkSlider from '../components/drinkSlider'
 import { useFonts, Bangers_400Regular } from '@expo-google-fonts/bangers';
 import CustomButton from '../components/customButton';
 import CategoriesSlider from '../components/categoriesSlider';
+import EventsSlider from '../components/eventsSlider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Home = () => {
 
@@ -12,24 +14,29 @@ const Home = () => {
   });
 
   if (!fontsLoaded) {
-    return null; // Możesz dodać wskaźnik ładowania tutaj
+    return null;
   }
 
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
       <DrinkSlider />
       <CategoriesSlider />
+      <EventsSlider/>
       <View style={styles.welcomeTextContainer}>
         <View style={styles.coctailMenu}>
           <ImageBackground source={require("../../assets/images/maintheme3.png")} style={styles.backgroundImage}>
-            <Text style={styles.welcomeText}>
-              Dowiedź się jak w prosty sposób przygotowywać drinki jak prawdziwy barman
-            </Text>
+
           </ImageBackground>
+          <Text style={styles.welcomeText}>
+              Dowiedź się jak w prosty sposób przygotowywać drinki jak <Text style={styles.highlight}>prawdziwy barman</Text>
+            </Text>
+            <Text style={styles.description}>Tworzenie własnych drinków nie musi być trudne, z pomocą naszego mixera stworzysz najlepsze drinki na swoją imprezę</Text>
           <CustomButton title="Znajdź przepisy" />
         </View>
       </View>
     </ScrollView>
+    </GestureHandlerRootView>
   )
 }
 
@@ -47,7 +54,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     width: '100%',
-    height: 180,
+    height: 200,
     resizeMode: 'cover',
     alignItems: 'center',
     justifyContent: 'center',
@@ -65,11 +72,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Bangers_400Regular',
     color: 'white',
-    position: 'absolute',
-    bottom: 20,
+    marginTop:20,
+    // position: 'absolute',
+    // bottom: 20,
     width: '80%',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 20
+  },
+  highlight:{
+    color: '#9d53c3',
     textShadowRadius: 10
   },
+  description:{
+    fontSize:16,
+    marginVertical:20,
+    paddingHorizontal:20
+  }
 });

@@ -3,29 +3,29 @@ import { StyleSheet, Text, View, Dimensions, ImageBackground } from 'react-nativ
 import Carousel from 'react-native-reanimated-carousel';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 
-const CategoriesSlider = () => {
+const EventsSlider = () => {
     const width = Dimensions.get('window').width;
 
     const categories = [
-        { name: 'Na bazie wódki', img: require("../../assets/images/categories/vodka.jpg")},
-        { name: 'Na bazie rumu', img: require("../../assets/images/categories/rum.jpg") },
-        { name: 'Na bazie ginu', img: require("../../assets/images/categories/gin.jpg") },
-        { name: 'Na bazie tequili' , img: require("../../assets/images/categories/tequila.jpg")},
-        { name: 'Na bazie whisky', img: require("../../assets/images/categories/whisky.jpg") },
+        { name: 'Bezalkoholowe', img: require("../../assets/images/eventsCat/noalko.jpg")},
+        { name: 'Klasyki', img: require("../../assets/images/eventsCat/classic.jpg") },
+        { name: 'Egzotyczne', img: require("../../assets/images/eventsCat/pinapple.jpg") },
+        { name: 'Lekkie' , img: require("../../assets/images/eventsCat/light.jpg")},
+        { name: 'Słodkie', img: require("../../assets/images/eventsCat/sweet.jpg") },
     ];
 
     const baseOptions = {
         vertical: false,
         width: width * 0.6,
-        height: 220,
+        height: width * 0.6,
         style: {
           width: width
         },
     };
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <Text style={styles.title}>Ze względu na użyty alkohol</Text>
+        <GestureHandlerRootView style={{ flex: 1, marginTop:20 }}>
+            <Text style={styles.title}>W zależności od okazji</Text>
             <PanGestureHandler activeOffsetX={[-10, 10]}>
                 <View>
                     <Carousel
@@ -48,7 +48,7 @@ const CategoriesSlider = () => {
     );
 };
 
-export default CategoriesSlider;
+export default EventsSlider;
 
 const styles = StyleSheet.create({
     title: {
@@ -61,15 +61,15 @@ const styles = StyleSheet.create({
     drinkNameText: {
         fontWeight: 'bold',
         fontSize: 16,
-        marginLeft:20,
         marginTop: 10,
+        marginLeft:20,
     },
     categoriesBox: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#cbbcf6',
-        borderRadius: 10,
+        borderRadius: 100,
         overflow: 'hidden',
         marginBottom:10,
     }
