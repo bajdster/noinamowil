@@ -7,6 +7,8 @@ import CategoriesSlider from '../components/categoriesSlider';
 import EventsSlider from '../components/eventsSlider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+//https://supabase.com/dashboard/project/mevyyzreknkmrisypxmd
+//a jak w ogole skonfigurowac projekt w tym supabase aby dodac tam dane, zdjęcia, może autentykację itp?
 const Home = () => {
 
   let [fontsLoaded] = useFonts({
