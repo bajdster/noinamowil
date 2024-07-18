@@ -42,7 +42,6 @@ useEffect(()=>
 
 function renderListItem(itemData)
 {
-  // console.log(itemData.item.title)
   return <RecipeListItem itemData={itemData}/>
 }
 
@@ -51,12 +50,12 @@ function renderListItem(itemData)
     <View style={styles.drinksContainer}>
       <Text>Input wyszukiwarki</Text>
       <Text>Lista drinków</Text>
-      {drinks ? <FlatList data={drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem}/> : <Text>Loading</Text>}
+      {drinks ? <FlatList data={drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading</Text>}
       
-      {drinks ? <Image 
+      {/* {drinks ? <Image 
       source={{ uri: drinks.data[0].image_url }} 
       style={{ width: 200, height: 200 }}
-    /> : <Text>Loading...</Text>}
+    /> : <Text>Loading...</Text>} */}
     </View>
   )
 }
@@ -67,5 +66,9 @@ const styles = StyleSheet.create({
   drinksContainer:{
     flex:1,
     padding:12
+  },
+  recipeList:{
+    backgroundColor:"lightgray",
+    width:'100%'
   }
 })
