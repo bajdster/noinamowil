@@ -8,7 +8,7 @@ const RecipeListItem = ({ itemData }) => {
 
     const openDrinkDetails = () =>
     {
-      router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title}})
+      router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title, id: itemData.item.id}})
     }
 
     return (

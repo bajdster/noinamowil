@@ -9,7 +9,6 @@ import { View } from "react-native";
 export default function RootLayout() {
   return (
     <>
-    <MainLogo/>
     <Tabs
     screenOptions={{
       tabBarActiveTintColor: "#00a6f9",

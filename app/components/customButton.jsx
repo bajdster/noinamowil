@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     buttonContainer:{
         height:48,
         borderRadius:40,
-        width:'80%',
+        width:'60%',
         backgroundColor:"#00a6f9",
         marginVertical:16,
         alignItems:'center',
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     buttonText:
     {
        color: 'white',
-       fontSize:18,
+       fontSize:14,
        textTransform:'uppercase',
        fontWeight:'bold',
     //    fontFamily: 'Bangers_400Regular',

@@ -1,11 +1,15 @@
-import { SafeAreaView, StyleSheet, Text, View, Image } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Image, Touchable, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { router } from 'expo-router'
 
 const MainLogo = () => {
   return (
-    <SafeAreaView style={styles.logoContainer}>
+    <TouchableOpacity onPress={() => router.replace("/")}>
+        <SafeAreaView style={styles.logoContainer}>
       <Image source={require('../../assets/images/logo.png')} style={styles.logoImage}/>
     </SafeAreaView>
+    </TouchableOpacity>
+
   )
 }
 
