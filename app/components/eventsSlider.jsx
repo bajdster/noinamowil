@@ -24,7 +24,7 @@ const EventsSlider = () => {
     };
 
     return (
-        <GestureHandlerRootView style={{ flex: 1, marginTop:20 }}>
+        <GestureHandlerRootView style={{ flex: 1, marginTop:20, marginBottom:20 }}>
             <Text style={styles.title}>W zależności od okazji</Text>
             <PanGestureHandler activeOffsetX={[-10, 10]}>
                 <View>

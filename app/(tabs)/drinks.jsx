@@ -50,12 +50,7 @@ function renderListItem(itemData)
     <View style={styles.drinksContainer}>
       <Text>Input wyszukiwarki</Text>
       <Text>Lista drinków</Text>
-      {drinks ? <FlatList data={drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading</Text>}
-      
-      {/* {drinks ? <Image 
-      source={{ uri: drinks.data[0].image_url }} 
-      style={{ width: 200, height: 200 }}
-    /> : <Text>Loading...</Text>} */}
+      {drinks ? <FlatList data={drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading...</Text>}
     </View>
   )
 }
@@ -68,7 +63,7 @@ const styles = StyleSheet.create({
     padding:12
   },
   recipeList:{
-    backgroundColor:"lightgray",
+    // backgroundColor:"lightgray",
     width:'100%'
   }
 })

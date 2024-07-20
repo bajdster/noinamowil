@@ -29,7 +29,7 @@ const DrinkSlider = () => {
     const width = Dimensions.get('window').width;
 
     return (
-        <View style={{ flex: 1, justifyContent:'center', alignItems:'center', marginTop:12, marginBottom:20 }}>
+        <View style={{ flex: 1, justifyContent:'center', alignItems:'center', marginTop:100, marginBottom:20 }}>
             <Text style={styles.title}>Propozycje dla Ciebie</Text>
             <Carousel
                 loop

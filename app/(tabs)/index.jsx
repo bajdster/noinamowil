@@ -22,21 +22,28 @@ const Home = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
     <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
+
+    <View style={styles.coctailMenu}>
+            <ImageBackground source={require("../../assets/images/watermelon.png")} style={styles.backgroundImage}>
+
+            </ImageBackground>
+
+
+        <View style={styles.welcomeTextContainer}>
+            <Text style={styles.welcomeText}>
+              Miksuj dowolnie swoje ulubione <Text style={styles.highlight}>koktaje</Text>
+            </Text>
+            {/* <Text style={styles.description}>Tysiące inspiracji na pyszne drinki</Text> */}
+            <CustomButton title="Znajdź przepisy" />
+        </View>
+
+    </View>
+        
+
       <DrinkSlider />
       <CategoriesSlider />
       <EventsSlider/>
-      <View style={styles.welcomeTextContainer}>
-        <View style={styles.coctailMenu}>
-          <ImageBackground source={require("../../assets/images/maintheme3.png")} style={styles.backgroundImage}>
-
-          </ImageBackground>
-          <Text style={styles.welcomeText}>
-              Dowiedź się jak w prosty sposób przygotowywać drinki jak <Text style={styles.highlight}>prawdziwy barman</Text>
-            </Text>
-            <Text style={styles.description}>Tworzenie własnych drinków nie musi być trudne, z pomocą naszego mixera stworzysz najlepsze drinki na swoją imprezę</Text>
-          <CustomButton title="Znajdź przepisy" />
-        </View>
-      </View>
+  
     </ScrollView>
     </GestureHandlerRootView>
   )
@@ -50,41 +57,48 @@ const styles = StyleSheet.create({
   },
   coctailMenu: {
     width: '100%',
+    height:250,
     alignItems:'center',
     justifyContent:'center',
-    marginTop:10
   },
   backgroundImage: {
     width: '100%',
-    height: 200,
-    resizeMode: 'cover',
+    height: 250,
+    resizeMode: 'contain',
     alignItems: 'center',
     justifyContent: 'center',
+    position:'relative',
+    backgroundColor:'#cadefc',
   },
   welcomeTextContainer: {
-    width: '100%',
+    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 16,
     marginBottom: 12,
-    overflow: 'hidden',
+    // overflow: 'hidden',
+    backgroundColor:'white',
+    borderRadius:10,
+    position:'absolute',
+    top:150,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   welcomeText: {
     fontSize: 22,
-    textAlign: 'center',
     fontFamily: 'Bangers_400Regular',
-    color: 'white',
+    color: '#8dc6ff',
     marginTop:20,
-    // position: 'absolute',
-    // bottom: 20,
     width: '80%',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 20
+    // textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    // textShadowOffset: { width: -1, height: 1 },
+    // textShadowRadius: 20
   },
   highlight:{
-    color: '#9d53c3',
-    textShadowRadius: 10
+    color: '#e6a4b4',
+    // textShadowRadius: 10
   },
   description:{
     fontSize:16,
