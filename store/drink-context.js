@@ -9,7 +9,7 @@ function DrinkContextProvider({children}) {
     const [drinks, setDrinks] = useState([]);
 
     function fetchDrinksList(drinks) {
-        console.log("fetch z context");
+        // console.log("fetch z context");
         setDrinks(drinks);
     }
 

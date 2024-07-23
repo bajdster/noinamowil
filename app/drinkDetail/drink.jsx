@@ -2,6 +2,9 @@ import { StyleSheet, Text, View, ScrollView, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import { getRecipe } from '../../lib/recipeActions'
+import Foundation from '@expo/vector-icons/Foundation';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const Drink = () => {
   const { title, id } = useLocalSearchParams()
@@ -37,25 +40,36 @@ const Drink = () => {
             <Image source={{uri: drink[0]?.image_url}} style={{width: 200, height: 200}} />
             <View style={styles.info}>
               {drink[0].category && <Text style={styles.categories}>{formattedCategory}</Text>}
-              <Text style={styles.drinkSecondaryTitle}>Detale</Text>
+              <View style={styles.ingredientsTitle}>
+                <Text style={styles.drinkSecondaryTitle}>Detale</Text>
+                <MaterialIcons name="details" size={24} color="#ffc93c" />
+              </View>
               <Text> 
                 <Text style={styles.bolded}>Główny alkohol:</Text> {drink[0]?.main_alcohol}
               </Text>
-              <Text>{drink[0]?.additional_info}</Text>
+              <Text style={styles.addedInfo}>{drink[0]?.additional_info}</Text>
             </View>
           </View>
           <View style={styles.ingredients}>
-            <Text style={styles.drinkSecondaryTitle}>Składniki</Text>
+            <View style={styles.ingredientsTitle}>
+              <Text style={styles.drinkSecondaryTitle}>Składniki</Text>
+              <AntDesign name="shoppingcart" size={24} color="#f76b8a" />
+            </View>
             <Text>{drink[0]?.ingredients}</Text>
           </View>
           <View style={styles.ingredients}>
-            <Text style={styles.drinkSecondaryTitle}>Przepis</Text>
+            <View style={styles.ingredientsTitle}>
+              <Text style={styles.drinkSecondaryTitle}>Przepis</Text>
+              <Foundation name="clipboard-notes" size={24} color="#005792" />
+            </View>
             <Text>{drink[0]?.instructions}</Text>
           </View>
         </>
       ) : (
         <Text>Loading...</Text>
       )}
+
+      
     </ScrollView>
   )
 }
@@ -79,7 +93,9 @@ const styles = StyleSheet.create({
   details: {
     flexDirection: 'row',
     backgroundColor:'white',
-    borderRadius:10
+    borderRadius:10,
+    padding:12,
+    elevation:3
   },
   categories: {
     backgroundColor: "#edb1f1",
@@ -89,7 +105,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   info:{
-    justifyContent:'space-around',
+    justifyContent:'space-evenly',
     flex:1,
     // backgroundColor:'red'
   },
@@ -97,12 +113,19 @@ const styles = StyleSheet.create({
     // backgroundColor:'red',
     padding:12,
   },
+  ingredientsTitle:{
+    flexDirection:'row'
+  },
   drinkSecondaryTitle:{
     fontWeight:'bold',
     fontSize:20,
-    marginBottom:8
+    marginBottom:8,
+    marginRight:6
   },
   bolded:{
     fontWeight:'bold'
+  },
+  addedInfo:{
+    color:'gray'
   }
 })

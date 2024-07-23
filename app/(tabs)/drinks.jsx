@@ -5,6 +5,7 @@ import supabase from '../../lib/supabaseClient'
 import RecipeListItem from '../components/recipeListItem'
 import DrinkContextProvider from '../../store/drink-context'
 import { DrinkContext } from '../../store/drink-context'
+import FilterInput from '../components/filterInput'
 
 const Drinks = () => {
 
@@ -16,15 +17,8 @@ useEffect(()=>
   {
     const drinks = await getRecipes()
     drinksCtx.fetchDrinksList(drinks)
-    // console.log(drinks.data[0].image_url)
-    // setDrinks(drinks)
-    // return drinks
   }
-
   getDrinks()
-  // console.log(drinks)
-
-
 }, [])
 
 function renderListItem(itemData)
@@ -35,11 +29,18 @@ function renderListItem(itemData)
   )
 }
 
+//teraz tu trzeba dodać obsługe state aby filtrowananie działąło na kopii
+function filterDrinks(filterText)
+{
+  console.log(filterText)
+}
+
   return (
     //dodanie inputa wyszukiwarki (po nazwie, skladnikach itp)
     <View style={styles.drinksContainer}>
-      <Text>Input wyszukiwarki</Text>
-      <Text>Lista drinków</Text>
+      <FilterInput onFilter={filterDrinks}/>
+      <Text>Sekcja szybkich filtrów</Text>
+      <Text style={styles.drinkListTitle}>Lista drinków</Text>
       {drinksCtx.drinks ? <FlatList data={drinksCtx.drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading...</Text>}
     </View>
   )
@@ -55,5 +56,9 @@ const styles = StyleSheet.create({
   recipeList:{
     // backgroundColor:"lightgray",
     width:'100%'
+  },
+  drinkListTitle:{
+    fontSize:16,
+    fontWeight:'bold'
   }
 })
