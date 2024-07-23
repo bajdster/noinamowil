@@ -1,48 +1,38 @@
 import { Text, StyleSheet, Image, FlatList, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { getRecipes } from '../../lib/recipeActions'
 import supabase from '../../lib/supabaseClient'
 import RecipeListItem from '../components/recipeListItem'
+import DrinkContextProvider from '../../store/drink-context'
+import { DrinkContext } from '../../store/drink-context'
 
 const Drinks = () => {
 
-const [drinks, setDrinks] = useState()
-
-
-// useEffect(()=>
-// {
-//   async function getImages()
-//   {
-//     const { data, error } = await supabase.storage
-//   .from('recipe-images')
-//   .download('*')
-//   return data
-//   }
-
-//   console.log(getImages())
-// }, [])
-
-
+const drinksCtx = useContext(DrinkContext)
 
 useEffect(()=>
 {
   const getDrinks = async () =>
   {
     const drinks = await getRecipes()
+    drinksCtx.fetchDrinksList(drinks)
     // console.log(drinks.data[0].image_url)
-    setDrinks(drinks)
-    return drinks
+    // setDrinks(drinks)
+    // return drinks
   }
 
   getDrinks()
-  console.log(drinks)
+  // console.log(drinks)
 
 
 }, [])
 
 function renderListItem(itemData)
 {
-  return <RecipeListItem itemData={itemData}/>
+  return (
+
+  <RecipeListItem itemData={itemData}/>
+  )
 }
 
   return (
@@ -50,7 +40,7 @@ function renderListItem(itemData)
     <View style={styles.drinksContainer}>
       <Text>Input wyszukiwarki</Text>
       <Text>Lista drinków</Text>
-      {drinks ? <FlatList data={drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading...</Text>}
+      {drinksCtx.drinks ? <FlatList data={drinksCtx.drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading...</Text>}
     </View>
   )
 }

@@ -9,7 +9,6 @@ const Drink = () => {
 
   useEffect(() => {
     const fetchDrinkInfo = async () => {
-      console.log('Fetching recipe with id:', id)
       const { data, error } = await getRecipe(id)
       if (error) {
         console.error('Error fetching recipe:', error.message)
@@ -38,7 +37,10 @@ const Drink = () => {
             <Image source={{uri: drink[0]?.image_url}} style={{width: 200, height: 200}} />
             <View style={styles.info}>
               {drink[0].category && <Text style={styles.categories}>{formattedCategory}</Text>}
-              <Text>Główny alkohol: {drink[0]?.main_alcohol}</Text>
+              <Text style={styles.drinkSecondaryTitle}>Detale</Text>
+              <Text> 
+                <Text style={styles.bolded}>Główny alkohol:</Text> {drink[0]?.main_alcohol}
+              </Text>
               <Text>{drink[0]?.additional_info}</Text>
             </View>
           </View>
@@ -71,10 +73,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: "center"
+    textAlign: "center",
+    color:'#0092ca'
   },
   details: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    backgroundColor:'white',
+    borderRadius:10
   },
   categories: {
     backgroundColor: "#edb1f1",
@@ -95,6 +100,9 @@ const styles = StyleSheet.create({
   drinkSecondaryTitle:{
     fontWeight:'bold',
     fontSize:20,
-    marginBottom:10
+    marginBottom:8
+  },
+  bolded:{
+    fontWeight:'bold'
   }
 })

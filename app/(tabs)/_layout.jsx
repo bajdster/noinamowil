@@ -5,10 +5,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import MainLogo from "../components/mainLogo";
 import { SafeAreaView } from "react-native";
 import { View } from "react-native";
+import DrinkContextProvider from "../../store/drink-context";
 
 export default function RootLayout() {
   return (
-    <>
+    <DrinkContextProvider>
     <Tabs
     screenOptions={{
       tabBarActiveTintColor: "#00a6f9",
@@ -35,6 +36,6 @@ export default function RootLayout() {
     />
 
   </Tabs>
-   </>
+   </DrinkContextProvider>
   );
 }
