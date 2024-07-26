@@ -10,6 +10,8 @@ import FilterInput from '../components/filterInput'
 const Drinks = () => {
 
 const drinksCtx = useContext(DrinkContext)
+const [filteredText, setFilteredText] = useState('')
+const [drinks, setDrinks] = useState([])
 
 useEffect(()=>
 {
@@ -17,6 +19,7 @@ useEffect(()=>
   {
     const drinks = await getRecipes()
     drinksCtx.fetchDrinksList(drinks)
+    setDrinks(drinks.data)
   }
   getDrinks()
 }, [])
@@ -29,19 +32,38 @@ function renderListItem(itemData)
   )
 }
 
-//teraz tu trzeba dodać obsługe state aby filtrowananie działąło na kopii
 function filterDrinks(filterText)
 {
-  console.log(filterText)
+  setFilteredText(filterText)
+}
+
+//filter by title
+useEffect(()=>
+{
+  if(filteredText !== '')
+  {
+    const filteredDrinks = drinksCtx.drinks.data.filter(drink => drink.title.toLowerCase().includes(filteredText.toLowerCase()))
+    setDrinks(filteredDrinks)
+  }
+  if(filteredText === '')
+  {
+    setDrinks(drinksCtx.drinks.data)
+  }
+}, [filteredText])
+
+
+function clearFilter()
+{
+  setDrinks(drinksCtx.drinks.data)
 }
 
   return (
     //dodanie inputa wyszukiwarki (po nazwie, skladnikach itp)
     <View style={styles.drinksContainer}>
-      <FilterInput onFilter={filterDrinks}/>
+      <FilterInput onFilter={filterDrinks} clearFilter={clearFilter}/>
       <Text>Sekcja szybkich filtrów</Text>
       <Text style={styles.drinkListTitle}>Lista drinków</Text>
-      {drinksCtx.drinks ? <FlatList data={drinksCtx.drinks.data} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading...</Text>}
+      {drinksCtx.drinks ? <FlatList data={drinks} keyExtractor={(item, index) => item.id} renderItem={renderListItem} style={styles.recipeList}/> : <Text>Loading...</Text>}
     </View>
   )
 }
