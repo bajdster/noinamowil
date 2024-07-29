@@ -22,7 +22,7 @@ const FilterInput = ({onFilter, clearFilter}) => {
     <View style={styles.inputContainer}>
       {filterText && 
       (
-        <TouchableOpacity style={{width:25, height:25, position:'absolute', zIndex:100, top: 10, right:10}} onPress={clearInputHandler}>
+        <TouchableOpacity style={{width:25, height:25, position:'absolute', zIndex:100, top: 12, right:10}} onPress={clearInputHandler}>
           <Image source={require("../../assets/icons/delete.png")} style={{width:"100%", height:'100%'}}/>
         </TouchableOpacity>
       )}
