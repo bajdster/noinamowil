@@ -19,6 +19,8 @@ const Home = () => {
     return null;
   }
 
+
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
     <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
@@ -92,6 +94,7 @@ const styles = StyleSheet.create({
     color: '#8dc6ff',
     marginTop:20,
     width: '80%',
+    textAlign:'center'
     // textShadowColor: 'rgba(0, 0, 0, 0.75)',
     // textShadowOffset: { width: -1, height: 1 },
     // textShadowRadius: 20

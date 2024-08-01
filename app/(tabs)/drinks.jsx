@@ -13,7 +13,7 @@ const Drinks = () => {
   const [filteredText, setFilteredText] = useState('')
   const [drinks, setDrinks] = useState([])
   const catagories = ["klasyczny", "orzeźwiający", "lekki", "bezalkoholowy", "egzotyczny", "słodki"]
-  const alkos = ["rum", "wódka", "whisky", "gin", "wino białe", "wino czerwone", "aperol", "piwo", "likier", "tequila"]
+  const alkos = ["rum", "wódka", "whisky", "gin", "wino białe", "wino czerwone", "aperol", "piwo", "likier", "tequila", "prosecco"]
 
   const [selectedCategory, setSelectedCategory] = useState("wszystkie");
   const [selectedAlko, setSelectedAlko] = useState("wszystkie");
@@ -89,7 +89,7 @@ const Drinks = () => {
           </Picker>
         </View>
       </View>
-      <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between'}}>
+      <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', height:30, alignItems:'center'}}>
         <Text style={styles.drinkListTitle}>Lista drinków</Text>
         {(selectedAlko !=='wszystkie' || selectedCategory !=="wszystkie") &&<TouchableOpacity style={styles.clearFiltersButton} onPress={clearFilter}><Text style={{color:'white'}}>Usuń filtry</Text></TouchableOpacity>}
       </View>
