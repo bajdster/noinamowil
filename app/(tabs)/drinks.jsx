@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Image, FlatList, View, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, Image, FlatList, View, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { getRecipes } from '../../lib/recipeActions'
 import supabase from '../../lib/supabaseClient'
@@ -17,16 +17,25 @@ const Drinks = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("wszystkie");
   const [selectedAlko, setSelectedAlko] = useState("wszystkie");
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
-    const getDrinks = async () => {
-      const drinks = await getRecipes()
-      drinksCtx.fetchDrinksList(drinks)
-      setDrinks(drinks.data)
-    }
     getDrinks()
   }, [])
 
+  const getDrinks = async () => {
+    const drinks = await getRecipes()
+    drinksCtx.fetchDrinksList(drinks)
+    setDrinks(drinks.data)
+  }
+
+  const onRefresh = async () =>
+  {
+    setRefreshing(true)
+    await getDrinks()
+    setRefreshing(false)
+  }
+  
   function filterDrinks(filterText) {
     setFilteredText(filterText)
   }
@@ -93,7 +102,11 @@ const Drinks = () => {
         <Text style={styles.drinkListTitle}>Lista drinków</Text>
         {(selectedAlko !=='wszystkie' || selectedCategory !=="wszystkie") &&<TouchableOpacity style={styles.clearFiltersButton} onPress={clearFilter}><Text style={{color:'white'}}>Usuń filtry</Text></TouchableOpacity>}
       </View>
-      {drinks ? <FlatList data={drinks} keyExtractor={(item, index) => item.id} renderItem={(itemData)=> <RecipeListItem itemData={itemData}/>} style={styles.recipeList}/> : <Text>Loading...</Text>}
+      {drinks ? <FlatList data={drinks} keyExtractor={(item, index) => item.id} renderItem={(itemData)=> <RecipeListItem itemData={itemData}/>} style={styles.recipeList} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}/> : 
+      <View>
+        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#f76b8a"/>
+      </View>}
     </View>
   )
 }
