@@ -69,6 +69,7 @@ const Drink = () => {
         <Text>Loading...</Text>
       )}
 
+      <Image source={require("../../assets/images/lemon.png")} style={{width:200, height:200, position:'absolute', bottom: 0, left:-10, opacity:0.5, zIndex: -1 }}/>
       
     </ScrollView>
   )

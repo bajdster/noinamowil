@@ -99,7 +99,7 @@ const Drinks = () => {
         </View>
       </View>
       <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', height:30, alignItems:'center'}}>
-        <Text style={styles.drinkListTitle}>Lista drinków</Text>
+        <Text style={styles.drinkListTitle}>Lista drinków {drinks.length}</Text>
         {(selectedAlko !=='wszystkie' || selectedCategory !=="wszystkie") &&<TouchableOpacity style={styles.clearFiltersButton} onPress={clearFilter}><Text style={{color:'white'}}>Usuń filtry</Text></TouchableOpacity>}
       </View>
       {drinks ? <FlatList data={drinks} keyExtractor={(item, index) => item.id} renderItem={(itemData)=> <RecipeListItem itemData={itemData}/>} style={styles.recipeList} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}/> : 
