@@ -7,8 +7,10 @@ import DrinkContextProvider from '../../store/drink-context'
 import { DrinkContext } from '../../store/drink-context'
 import FilterInput from '../components/filterInput'
 import { Picker } from '@react-native-picker/picker';
+import { useLocalSearchParams } from 'expo-router'
 
 const Drinks = () => {
+  const {paramsCategory} = useLocalSearchParams()
   const drinksCtx = useContext(DrinkContext)
   const [filteredText, setFilteredText] = useState('')
   const [drinks, setDrinks] = useState([])
@@ -18,6 +20,15 @@ const Drinks = () => {
   const [selectedCategory, setSelectedCategory] = useState("wszystkie");
   const [selectedAlko, setSelectedAlko] = useState("wszystkie");
   const [refreshing, setRefreshing] = useState(false)
+
+  //use the same for choosing alko type filtering when router.push
+  useEffect(()=>
+  {
+    if(paramsCategory)
+    {
+      setSelectedCategory(paramsCategory)
+    }
+  }, [paramsCategory])
 
   useEffect(() => {
     getDrinks()
@@ -46,6 +57,7 @@ const Drinks = () => {
     setSelectedAlko('wszystkie')
     setDrinks(drinksCtx.drinks.data)
   }
+  
 
   useEffect(() => {
     let filteredDrinks = drinksCtx.drinks.data;
@@ -77,7 +89,7 @@ const Drinks = () => {
             onValueChange={(itemValue, itemIndex) =>
               setSelectedCategory(itemValue)
             }>
-            <Picker.Item label="Wszystkie" value="wszystkie"/>
+            <Picker.Item label={"Wszystkie"} value="wszystkie"/>
             {catagories.map((category, index) => (
               <Picker.Item key={index} label={category} value={category}/>
             ))}
@@ -99,7 +111,7 @@ const Drinks = () => {
         </View>
       </View>
       <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', height:30, alignItems:'center'}}>
-        <Text style={styles.drinkListTitle}>Lista drinków {drinks.length}</Text>
+        <Text style={styles.drinkListTitle}>Lista drinków {drinks && drinks.length}</Text>
         {(selectedAlko !=='wszystkie' || selectedCategory !=="wszystkie") &&<TouchableOpacity style={styles.clearFiltersButton} onPress={clearFilter}><Text style={{color:'white'}}>Usuń filtry</Text></TouchableOpacity>}
       </View>
       {drinks ? <FlatList data={drinks} keyExtractor={(item, index) => item.id} renderItem={(itemData)=> <RecipeListItem itemData={itemData}/>} style={styles.recipeList} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}/> : 
