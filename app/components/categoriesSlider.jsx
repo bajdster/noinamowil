@@ -1,17 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { router } from 'expo-router';
 
 const CategoriesSlider = () => {
     const width = Dimensions.get('window').width;
 
     const categories = [
-        { name: 'Na bazie wódki', img: require("../../assets/images/categories/vodka.jpg")},
-        { name: 'Na bazie rumu', img: require("../../assets/images/categories/rum.jpg") },
-        { name: 'Na bazie ginu', img: require("../../assets/images/categories/gin.jpg") },
-        { name: 'Na bazie tequili' , img: require("../../assets/images/categories/tequila.jpg")},
-        { name: 'Na bazie whisky', img: require("../../assets/images/categories/whisky.jpg") },
+        { name: 'Na bazie wódki', img: require("../../assets/images/categories/vodka.jpg"), alko: "wódka"},
+        { name: 'Na bazie rumu', img: require("../../assets/images/categories/rum.jpg"), alko: "rum" },
+        { name: 'Na bazie ginu', img: require("../../assets/images/categories/gin.jpg"), alko: 'gin'},
+        { name: 'Na bazie tequili' , img: require("../../assets/images/categories/tequila.jpg"), alko: 'tequila'},
+        { name: 'Na bazie whisky', img: require("../../assets/images/categories/whisky.jpg"), alko: "whisky" },
     ];
 
     const baseOptions = {
@@ -22,6 +23,12 @@ const CategoriesSlider = () => {
           width: width
         },
     };
+
+    function getDrinksWithAlkoHandler(alko)
+    {
+        // console.log(alko)
+        router.push({pathname:"drinks", params:{paramsCategory: alko }})
+    }
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -35,11 +42,13 @@ const CategoriesSlider = () => {
                         data={categories}
                         scrollAnimationDuration={2000}
                         renderItem={({ item }) => (
-                            <>
-                                <ImageBackground source={item.img} style={[styles.categoriesBox, { width: width * 0.5 }]}>
-                                </ImageBackground>
-                                <Text style={styles.drinkNameText}>{item.name}</Text>
-                            </>
+                            <View style={{ alignItems: 'center' }}>
+                                <TouchableOpacity style={{ alignItems: 'center' }} onPress={()=> {getDrinksWithAlkoHandler(item.alko)}}>
+                                    <ImageBackground source={item.img} style={[styles.categoriesBox, { width: width * 0.5 }]}>
+                                    </ImageBackground>
+                                    <Text style={styles.drinkNameText}>{item.name}</Text>
+                                </TouchableOpacity>
+                            </View>
                         )}
                     />
                 </View>

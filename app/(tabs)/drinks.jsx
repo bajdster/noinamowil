@@ -21,15 +21,17 @@ const Drinks = () => {
   const [selectedAlko, setSelectedAlko] = useState("wszystkie");
   const [refreshing, setRefreshing] = useState(false)
 
-  //use the same for choosing alko type filtering when router.push
-  useEffect(()=>
-  {
-    if(paramsCategory)
-    {
+  // Set category and alcohol type from params
+  useEffect(() => {
+    if(paramsCategory && catagories.includes(paramsCategory)) {
       setSelectedCategory(paramsCategory)
+    }
+    if(paramsCategory && alkos.includes(paramsCategory)) {
+      setSelectedAlko(paramsCategory)
     }
   }, [paramsCategory])
 
+  // Fetch drinks
   useEffect(() => {
     getDrinks()
   }, [])
@@ -40,13 +42,12 @@ const Drinks = () => {
     setDrinks(drinks.data)
   }
 
-  const onRefresh = async () =>
-  {
+  const onRefresh = async () => {
     setRefreshing(true)
     await getDrinks()
     setRefreshing(false)
   }
-  
+
   function filterDrinks(filterText) {
     setFilteredText(filterText)
   }
@@ -57,9 +58,10 @@ const Drinks = () => {
     setSelectedAlko('wszystkie')
     setDrinks(drinksCtx.drinks.data)
   }
-  
 
+  // Apply filters
   useEffect(() => {
+    if (!drinksCtx.drinks || !drinksCtx.drinks.data) return;
     let filteredDrinks = drinksCtx.drinks.data;
 
     if (filteredText) {
@@ -75,7 +77,7 @@ const Drinks = () => {
     }
 
     setDrinks(filteredDrinks);
-  }, [filteredText, selectedCategory, selectedAlko]);
+  }, [filteredText, selectedCategory, selectedAlko, drinksCtx.drinks.data]);
 
   return (
     <View style={styles.drinksContainer}>
