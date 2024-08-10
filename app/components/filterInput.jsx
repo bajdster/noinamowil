@@ -26,7 +26,7 @@ const FilterInput = ({onFilter, clearFilter}) => {
           <Image source={require("../../assets/icons/delete.png")} style={{width:"100%", height:'100%'}}/>
         </TouchableOpacity>
       )}
-      <TextInput style={styles.input} placeholder='Wpisz nazwę, kategorię lub składnik' onChangeText={onChangeText} value={filterText}/>
+      <TextInput style={styles.input} placeholder='Wpisz nazwę koktajlu' onChangeText={onChangeText} value={filterText}/>
     </View>
   )
 }

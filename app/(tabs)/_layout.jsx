@@ -7,8 +7,11 @@ import { SafeAreaView } from "react-native";
 import { View } from "react-native";
 import DrinkContextProvider from "../../store/drink-context";
 
+
 export default function RootLayout() {
   return (
+    <>
+    <MainLogo/>
     <DrinkContextProvider>
     <Tabs
     screenOptions={{
@@ -37,5 +40,7 @@ export default function RootLayout() {
 
   </Tabs>
    </DrinkContextProvider>
+   </>
   );
+  
 }

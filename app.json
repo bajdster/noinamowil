@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "@latest",
-    "slug": "@latest",
+    "name": "No i namówił - drink bar",
+    "slug": "noinamowil",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/ninlogo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/ninlogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bajdster.noinamowil"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +33,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "78d96765-5bbf-485e-bc5c-6edad2a61d0a"
+      }
     }
   }
 }
