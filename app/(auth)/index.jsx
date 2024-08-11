@@ -1,29 +1,89 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
-import React, {useState} from 'react';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { Link } from 'expo-router';
+import supabase from '../../lib/supabaseClient';
 
 const Auth = () => {
 
     const [mode, setMode] = useState('login')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [repeatedPassword, setRepeatedPassword] = useState('')
+    const [loading, setLoading] = useState(false)
+    
+  function changeModeHandler()
+  {
+    setMode((prev)=>
+    {
+      return prev === 'login' ? "signup" : 'login'
+    })
+  }
+
+async function signInWithEmail() {
+  setLoading(true)
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password,
+  })
+
+  if (error) Alert.alert(error.message)
+  if(!error) Alert.alert("Zalogowano pomyślnie")
+  setLoading(false)
+}
+
+async function signUpWithEmail() {
+  setLoading(true)
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+  })
+
+  if (error) Alert.alert(error.message)
+  if (!session && !error) Alert.alert('Pomyślnie udało Ci się zarejestrować !')
+  setLoading(false)
+}
 
   return (
     <View style={styles.authContainer}>
       <Image source={require("../../assets/images/logo.png")} style={{ width: 300, height: 300 }} />
       <View style={styles.credentials}>
-        <View>
-          <Text style={styles.inputCredentialsText}>Login</Text>
-          <TextInput style={styles.input} />
+        {mode=== "login" ? <View>
+          <View>
+            <Text style={styles.inputCredentialsText}>E-mail</Text>
+            <TextInput style={styles.input} />
+          </View>
+          <View>
+            <Text style={styles.inputCredentialsText}>Hasło</Text>
+            <TextInput style={styles.input} secureTextEntry />
+          </View>
         </View>
+        :
         <View>
-          <Text style={styles.inputCredentialsText}>Hasło</Text>
-          <TextInput style={styles.input} secureTextEntry />
-        </View>
+            <View>
+              <Text style={styles.inputCredentialsText}>E-mail</Text>
+              <TextInput style={styles.input} onChangeText={(email)=> setEmail(email)} />
+            </View>
+            <View>
+              <Text style={styles.inputCredentialsText}>Hasło</Text>
+              <TextInput style={styles.input} secureTextEntry onChangeText={(password)=> setPassword(password)}/>
+            </View>
+            <View>
+              <Text style={styles.inputCredentialsText}>Powtórz hasło</Text>
+              <TextInput style={styles.input} secureTextEntry onChangeText={(repeatedPassword)=> setRepeatedPassword(repeatedPassword)}/>
+            </View>
+        </View>}
 
-        <TouchableOpacity style={styles.authButton}>
-          <Text style={styles.authButtonText}>Zaloguj się</Text>
+        <TouchableOpacity style={styles.authButton} onPress={mode === "login" ? signInWithEmail : signUpWithEmail}>
+            <Text style={styles.authButtonText}>{mode === "login" ? 'Zaloguj się' : "Zarejestruj się"}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.authInfo}>
-            <Text style={styles.authInfoText}>Nie masz konta? Zarejestruj się</Text>
+        <TouchableOpacity style={styles.authInfo} onPress={changeModeHandler} >
+            <Text style={styles.authInfoText}>{mode === 'login' ? 'Nie masz konta? Zarejestruj się' : 'Masz konto? Zaloguj się'}</Text>
         </TouchableOpacity>
+
+        <Link href="(tabs)" style={{marginTop:30, padding: 8, backgroundColor:'pink', width:'50%', borderRadius: 10, textAlign:'center'}}>Kontynuuj jako gość</Link>
       </View>
     </View>
   );
@@ -63,7 +123,7 @@ const styles = StyleSheet.create({
   authButton: {
     width: '100%',
     height: 50,
-    backgroundColor: '#8dc6ff',
+    backgroundColor: '#00a6f9',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
