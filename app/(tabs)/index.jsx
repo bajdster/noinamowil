@@ -1,29 +1,58 @@
 import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import DrinkSlider from '../components/drinkSlider'
 import { useFonts, Bangers_400Regular } from '@expo-google-fonts/bangers';
 import CustomButton from '../components/customButton';
 import CategoriesSlider from '../components/categoriesSlider';
 import EventsSlider from '../components/eventsSlider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import supabase from '../../lib/supabaseClient';
 
-//https://supabase.com/dashboard/project/mevyyzreknkmrisypxmd
-//a jak w ogole skonfigurowac projekt w tym supabase aby dodac tam dane, zdjęcia, może autentykację itp?
+
 const Home = () => {
 
-  let [fontsLoaded] = useFonts({
-    Bangers_400Regular,
-  });
+  const [session, setSession] = useState(null);
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  // let [fontsLoaded] = useFonts({
+  //   Bangers_400Regular,
+  // });
 
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
+
+  useEffect(() => {
+    const checkSession = async () => {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+            Alert.alert(error.message);
+            return;
+        }
+        setSession(session);
+    };
+
+    checkSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session);
+
+    });
+
+    return () => {
+        authListener?.subscription?.unsubscribe();
+    };
+}, []);
 
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
     <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
+
+    <View style={styles.welcomeUser}>
+      <Text style={styles.welcomeUserText}>Witaj</Text>
+      {session && session.user && <Text>{session.user.email}</Text>}
+    </View>
+
 
     <View style={styles.coctailMenu}>
             <ImageBackground source={require("../../assets/images/watermelon.png")} style={styles.backgroundImage}>
@@ -56,6 +85,17 @@ export default Home
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+  },
+  welcomeUser:{
+    marginVertical:10,
+    alignItems:'flex-start',
+    justifyContent:'center',
+    width:'100%',
+    padding:10
+  },
+  welcomeUserText:{
+    fontSize:26,
+    fontWeight:'bold'
   },
   coctailMenu: {
     width: '100%',

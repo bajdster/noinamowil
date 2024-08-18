@@ -52,7 +52,7 @@ const Auth = () => {
         setLoading(false);
 
         if (error) {
-            Alert.alert(error.message);
+            Alert.alert("Nieprawidłowy login lub hasło");
         } else {
             Alert.alert("Zalogowano pomyślnie");
             // Supabase session state change listener will handle the redirection

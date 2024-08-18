@@ -1,32 +1,57 @@
-import { SafeAreaView, StyleSheet, Text, View, Image, Touchable, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { router } from 'expo-router'
+import { SafeAreaView, StyleSheet, View, Image, TouchableOpacity, Alert } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { router } from 'expo-router';
+import supabase from '../../lib/supabaseClient';
 
 const MainLogo = () => {
-  return (
-    <TouchableOpacity onPress={() => router.replace("/")}>
-        <SafeAreaView style={styles.logoContainer}>
-      <Image source={require('../../assets/images/logo.png')} style={styles.logoImage}/>
-    </SafeAreaView>
-    </TouchableOpacity>
 
-  )
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        Alert.alert(error.message);
+    } else {
+        Alert.alert('Wylogowano pomyślnie');
+        router.replace('/');
+    }
+};
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={() => router.replace("/")}>
+        <SafeAreaView style={styles.logoContainer}>
+          <Image source={require('../../assets/images/logo.png')} style={styles.logoImage}/>
+        </SafeAreaView>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+        <Image source={require('../../assets/icons/logout.png')} style={styles.logoutImage}/>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
-export default MainLogo
+export default MainLogo;
 
 const styles = StyleSheet.create({
-    logoContainer:{
-        paddingTop:64,
-        marginBottom:12,
-        height:96,
-        width:'100%',
-        alignItems:'center',
-        justifyContent:'center',
-        // backgroundColor:'red'
-    },
-    logoImage:{
-        width:'35%',
-        height:90
-    }
-})
+  container: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    justifyContent: 'space-between', 
+    paddingTop: 64,
+    paddingHorizontal: 20, 
+    width: '100%',
+    height: 120, 
+  },
+  logoContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+  },
+  logoImage: {
+    width: 100, 
+    height: 110, 
+  },
+  logoutImage: {
+    width: 20, 
+    height: 20, 
+  },
+});

@@ -79,6 +79,7 @@ export default Drink
 
 const styles = StyleSheet.create({
   drinkMainContainer: {
+    marginTop:36,
     paddingHorizontal: 20,
     paddingVertical:12,
     flex: 1,
