@@ -21,6 +21,7 @@
     "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-native-community/netinfo": "^11.3.2",
     "@react-native-picker/picker": "^2.7.7",
+    "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.0.2",
     "@rneui/themed": "^4.0.0-rc.8",
     "@supabase/postgrest-js": "^1.15.8",

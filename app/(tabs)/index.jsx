@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, ImageBackground, Image } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import DrinkSlider from '../components/drinkSlider'
 import { useFonts, Bangers_400Regular } from '@expo-google-fonts/bangers';
@@ -49,7 +49,14 @@ const Home = () => {
     <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
 
     <View style={styles.welcomeUser}>
-      <Text style={styles.welcomeUserText}>Witaj</Text>
+      <View style={styles.mainBanner}>
+        <Image
+                source={require("../../assets/icons/profile.png")} // Przykładowy obrazek użytkownika
+                style={styles.userImage}
+          />
+        <Text style={styles.welcomeUserText}>Witaj</Text>
+      </View>
+
       {session && session.user && <Text>{session.user.email}</Text>}
     </View>
 
@@ -86,12 +93,24 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
+  mainBanner:{
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  userImage:{
+    width:20,
+    height:20,
+    marginRight:5,
+    tintColor: 'black',
+  },
   welcomeUser:{
     marginVertical:10,
     alignItems:'flex-start',
     justifyContent:'center',
     width:'100%',
-    padding:10
+    paddingVertical:10,
+    paddingHorizontal:20
   },
   welcomeUserText:{
     fontSize:26,

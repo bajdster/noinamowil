@@ -11,10 +11,15 @@ const RecipeListItem = ({ itemData }) => {
       router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title, id: itemData.item.id}})
     }
 
+    const bookmarkHandler = () =>
+    {
+        console.log("bookmark")
+    }
+
     return (
       <TouchableOpacity onPress={openDrinkDetails}>
         <View style={styles.listItemContainer}>
-            <View>
+            <View style={styles.imageContainer}>
                 <Image source={{ uri: itemData.item.image_url }} style={{ width: 60, height: 60 }} />
             </View>
 
@@ -33,7 +38,12 @@ const RecipeListItem = ({ itemData }) => {
                     <Text></Text>
                     <Text style={styles.categories}>Główny alkohol: {itemData.item.main_alcohol}</Text>
                 </View>
+
             </View>
+            
+            <TouchableOpacity onPress={bookmarkHandler} style={styles.bookmarkContainer}>
+                    <Image source={require("../../assets/icons/bookmark.png")} style={styles.bookmark}/>
+            </TouchableOpacity>
         </View>
         </TouchableOpacity>
     );
@@ -62,8 +72,16 @@ const styles = StyleSheet.create({
             },
         }),
     },
+    imageContainer:{
+        flex:1
+    },
     textContainer: {
         marginLeft: 10,
+        flex:3
+    },
+    bookmarkContainer:{
+        flex:1,
+        alignItems:'center'
     },
     title: {
         fontWeight: 'bold',
@@ -75,5 +93,10 @@ const styles = StyleSheet.create({
     },
     details:{
       flexDirection:'row'
+    },
+    bookmark:{
+        width:25,
+        height:25,
+        tintColor:'lightgray',
     }
 });
