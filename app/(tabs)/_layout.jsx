@@ -7,6 +7,7 @@ import MainLogo from "../components/mainLogo";
 import { SafeAreaView } from "react-native";
 import { View } from "react-native";
 import DrinkContextProvider from "../../store/drink-context";
+import Fontisto from '@expo/vector-icons/Fontisto';
 
 
 export default function RootLayout() {
@@ -35,6 +36,16 @@ export default function RootLayout() {
         headerShown:false,
         tabBarIcon: ({color, focused}) => (
           <MaterialIcons name="local-drink" size={24} color={color} />
+        )
+      }}
+    />
+    <Tabs.Screen
+      name="favorites"
+      options={{
+        title: 'Ulubione',
+        headerShown:false,
+        tabBarIcon: ({color, focused}) => (
+          <Fontisto name="favorite" size={24} color={color}/>
         )
       }}
     />
