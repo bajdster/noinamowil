@@ -1,12 +1,14 @@
 import { Image, StyleSheet, Text, View, Platform, TouchableOpacity } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Link, router } from 'expo-router';
 import supabase from '../../lib/supabaseClient';
+import { DrinkContext } from '../../store/drink-context';
 
 const RecipeListItem = ({ itemData }) => {
     const categories = itemData.item.category ? itemData.item.category.join(', ') : '';
 
     const [session, setSession] = useState(null);
+    const ctx = useContext(DrinkContext)
   
     useEffect(() => {
         const checkSession = async () => {
@@ -30,21 +32,24 @@ const RecipeListItem = ({ itemData }) => {
         };
     }, []);
 
-
+    
     const openDrinkDetails = () =>
-    {
-      router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title, id: itemData.item.id}})
-    }
-
-    const bookmarkHandler = async () =>
-    {
-        const { data, error } = await supabase
-        .from('favorites')
-        .insert([
-        { user_id: session.user.id, drink_id: itemData.item.id},
-        ]);
-    }
-
+        {
+            router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title, id: itemData.item.id}})
+        }
+        
+        //okodować usunięcie z ulubionych oraz oznaczenie graficzne że drink znajduje się w ulubionych
+        const bookmarkHandler = async () =>
+            {
+                const { data, error } = await supabase
+                .from('favorites')
+                .insert([
+                    { user_id: session.user.id, drink_id: itemData.item.id},
+                ]);
+                
+                ctx.addFavDrink(itemData.item)
+            }
+            
     return (
       <TouchableOpacity onPress={openDrinkDetails}>
         <View style={styles.listItemContainer}>

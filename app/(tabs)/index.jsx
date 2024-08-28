@@ -51,7 +51,7 @@ const Home = () => {
     <View style={styles.welcomeUser}>
       <View style={styles.mainBanner}>
         <Image
-                source={require("../../assets/icons/profile.png")} // Przykładowy obrazek użytkownika
+                source={require("../../assets/icons/profile.png")}
                 style={styles.userImage}
           />
         <Text style={styles.welcomeUserText}>Witaj</Text>
