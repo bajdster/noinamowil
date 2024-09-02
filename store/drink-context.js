@@ -31,9 +31,13 @@ function DrinkContextProvider({children}) {
         })
     }
 
-    function removeFavDrink()
+    function removeFavDrink(toRemovedId)
     {
-        //implement removing from fav
+        const filteredItems = favDrinks.filter((favDrink)=>
+        {
+             return favDrink.id !== toRemovedId
+        })
+        setFavDrinks(filteredItems)
     }
 
     const value = {

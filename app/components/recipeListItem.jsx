@@ -9,6 +9,7 @@ const RecipeListItem = ({ itemData }) => {
 
     const [session, setSession] = useState(null);
     const ctx = useContext(DrinkContext)
+    const [isItemFavorite, setIsItemFavorite] = useState(false)
   
     useEffect(() => {
         const checkSession = async () => {
@@ -32,23 +33,55 @@ const RecipeListItem = ({ itemData }) => {
         };
     }, []);
 
+    useEffect(()=>
+    {
+        for(const item of ctx.favDrinks)
+        {
+            if(item.id === itemData.item.id)
+            {
+                setIsItemFavorite(true)
+            }
+        }
+    }, [ctx.favDrinks])
+
     
-    const openDrinkDetails = () =>
+        const openDrinkDetails = () =>
         {
             router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title, id: itemData.item.id}})
         }
         
         //okodować usunięcie z ulubionych oraz oznaczenie graficzne że drink znajduje się w ulubionych
-        const bookmarkHandler = async () =>
-            {
+        const bookmarkHandler = async () => {
+            if (isItemFavorite) {
+                // Usuń z ulubionych
                 const { data, error } = await supabase
-                .from('favorites')
-                .insert([
-                    { user_id: session.user.id, drink_id: itemData.item.id},
-                ]);
-                
-                ctx.addFavDrink(itemData.item)
+                    .from('favorites')
+                    .delete()
+                    .eq('user_id', session.user.id)
+                    .eq('drink_id', itemData.item.id);
+        
+                if (error) {
+                    console.error("Error removing favorite:", error);
+                } else {
+                    ctx.removeFavDrink(itemData.item.id); // Usuń z kontekstu
+                    setIsItemFavorite(false); // Zaktualizuj stan lokalny
+                }
+            } else {
+                // Dodaj do ulubionych
+                const { data, error } = await supabase
+                    .from('favorites')
+                    .insert([
+                        { user_id: session.user.id, drink_id: itemData.item.id },
+                    ]);
+        
+                if (error) {
+                    console.error("Error adding favorite:", error);
+                } else {
+                    ctx.addFavDrink(itemData.item); // Dodaj do kontekstu
+                    setIsItemFavorite(true); // Zaktualizuj stan lokalny
+                }
             }
+        }
             
     return (
       <TouchableOpacity onPress={openDrinkDetails}>
@@ -76,7 +109,7 @@ const RecipeListItem = ({ itemData }) => {
             </View>
             
             <TouchableOpacity onPress={bookmarkHandler} style={styles.bookmarkContainer}>
-                    <Image source={require("../../assets/icons/bookmark.png")} style={styles.bookmark}/>
+                    <Image source={require("../../assets/icons/bookmark.png")} style={[styles.bookmark, isItemFavorite && {tintColor:'black'}]}/>
             </TouchableOpacity>
         </View>
         </TouchableOpacity>
