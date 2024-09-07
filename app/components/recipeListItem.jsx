@@ -50,7 +50,7 @@ const RecipeListItem = ({ itemData }) => {
             router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title, id: itemData.item.id}})
         }
         
-        //okodować usunięcie z ulubionych oraz oznaczenie graficzne że drink znajduje się w ulubionych
+        //okodować to aby ikona ulubione była po wejściuw w szczegóły drinka
         const bookmarkHandler = async () => {
             if (isItemFavorite) {
                 // Usuń z ulubionych

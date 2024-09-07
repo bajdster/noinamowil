@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } fro
 import React, { useEffect, useState } from 'react';
 import supabase from '../../lib/supabaseClient';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const Auth = () => {
     const [mode, setMode] = useState('login');
@@ -20,15 +21,17 @@ const Auth = () => {
             }
             setSession(session);
             if (session) {
+                await saveSession(session); // Save session when checking
                 router.push("(tabs)");
             }
         };
 
         checkSession();
 
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
             setSession(session);
             if (session) {
+                await saveSession(session); // Save session when auth state changes
                 router.push("(tabs)");
             }
         });
@@ -37,6 +40,14 @@ const Auth = () => {
             authListener?.subscription?.unsubscribe();
         };
     }, []);
+
+    const saveSession = async (session) => {
+        try {
+            await AsyncStorage.setItem('session', JSON.stringify(session));
+        } catch (error) {
+            console.error('Error saving session:', error);
+        }
+    };
 
     const changeModeHandler = () => {
         setMode((prev) => (prev === 'login' ? 'signup' : 'login'));

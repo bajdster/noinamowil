@@ -7,6 +7,7 @@ import CategoriesSlider from '../components/categoriesSlider';
 import EventsSlider from '../components/eventsSlider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import supabase from '../../lib/supabaseClient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Home = () => {
@@ -20,6 +21,26 @@ const Home = () => {
   // if (!fontsLoaded) {
   //   return null;
   // }
+
+  useEffect(() => {
+    const loadSession = async () => {
+        try {
+            const sessionString = await AsyncStorage.getItem('session');
+            if (sessionString) {
+                const savedSession = JSON.parse(sessionString);
+                setSession(savedSession);
+                console.log('Session loaded from AsyncStorage:', savedSession);
+            } else {
+                console.log('No session found in AsyncStorage');
+            }
+        } catch (error) {
+            console.error('Error loading session:', error);
+        }
+    };
+
+    loadSession();
+}, []);
+
 
   useEffect(() => {
     const checkSession = async () => {
