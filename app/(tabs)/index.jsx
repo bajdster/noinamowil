@@ -7,7 +7,7 @@ import CategoriesSlider from '../components/categoriesSlider';
 import EventsSlider from '../components/eventsSlider';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import supabase from '../../lib/supabaseClient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loadSession } from '../../lib/recipeActions';
 
 
 const Home = () => {
@@ -23,46 +23,36 @@ const Home = () => {
   // }
 
   useEffect(() => {
-    const loadSession = async () => {
-        try {
-            const sessionString = await AsyncStorage.getItem('session');
-            if (sessionString) {
-                const savedSession = JSON.parse(sessionString);
-                setSession(savedSession);
-                console.log('Session loaded from AsyncStorage:', savedSession);
-            } else {
-                console.log('No session found in AsyncStorage');
-            }
-        } catch (error) {
-            console.error('Error loading session:', error);
-        }
+    const loadSessionFromAsyncStorage = async () => {
+      const session = await loadSession()
+      setSession(session)
     };
 
-    loadSession();
+    loadSessionFromAsyncStorage();
 }, []);
 
 
-  useEffect(() => {
-    const checkSession = async () => {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-            Alert.alert(error.message);
-            return;
-        }
-        setSession(session);
-    };
+//   useEffect(() => {
+//     const checkSession = async () => {
+//         const { data: { session }, error } = await supabase.auth.getSession();
+//         if (error) {
+//             Alert.alert(error.message);
+//             return;
+//         }
+//         setSession(session);
+//     };
 
-    checkSession();
+//     checkSession();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
+//     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+//         setSession(session);
 
-    });
+//     });
 
-    return () => {
-        authListener?.subscription?.unsubscribe();
-    };
-}, []);
+//     return () => {
+//         authListener?.subscription?.unsubscribe();
+//     };
+// }, []);
 
 
   return (

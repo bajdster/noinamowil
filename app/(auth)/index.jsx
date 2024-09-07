@@ -3,42 +3,29 @@ import React, { useEffect, useState } from 'react';
 import supabase from '../../lib/supabaseClient';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import { loadSession } from '../../lib/recipeActions'; // Import funkcji loadSession
 
 const Auth = () => {
     const [mode, setMode] = useState('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatedPassword, setRepeatedPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // Zmieniony na true, aby rozpocząć ładowanie od razu
     const [session, setSession] = useState(null);
 
     useEffect(() => {
         const checkSession = async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            if (error) {
-                Alert.alert(error.message);
-                return;
-            }
-            setSession(session);
+            const session = await loadSession();
             if (session) {
-                await saveSession(session); // Save session when checking
+                // Jeśli sesja istnieje, przekieruj użytkownika do ekranu 'tabs'
                 router.push("(tabs)");
+            } else {
+                // Jeśli sesja nie istnieje, ustaw loading na false
+                setLoading(false);
             }
         };
 
         checkSession();
-
-        const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            setSession(session);
-            if (session) {
-                await saveSession(session); // Save session when auth state changes
-                router.push("(tabs)");
-            }
-        });
-
-        return () => {
-            authListener?.subscription?.unsubscribe();
-        };
     }, []);
 
     const saveSession = async (session) => {
@@ -55,7 +42,7 @@ const Auth = () => {
 
     const signInWithEmail = async () => {
         setLoading(true);
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error, data } = await supabase.auth.signInWithPassword({
             email,
             password,
         });
@@ -65,8 +52,9 @@ const Auth = () => {
         if (error) {
             Alert.alert("Nieprawidłowy login lub hasło");
         } else {
+            await saveSession(data.session);
             Alert.alert("Zalogowano pomyślnie");
-            // Supabase session state change listener will handle the redirection
+            router.push("(tabs)");
         }
     };
 
@@ -77,7 +65,7 @@ const Auth = () => {
         }
 
         setLoading(true);
-        const { error } = await supabase.auth.signUp({
+        const { error, data } = await supabase.auth.signUp({
             email,
             password,
         });
@@ -87,9 +75,16 @@ const Auth = () => {
         if (error) {
             Alert.alert(error.message);
         } else {
+            await saveSession(data.session);
             Alert.alert('Pomyślnie udało Ci się zarejestrować !');
+            router.push("(tabs)");
         }
     };
+
+    // Wyświetl spinner ładowania lub formularz logowania w zależności od stanu loading
+    if (loading) {
+        return <View style={styles.authContainer}><Text>Loading...</Text></View>;
+    }
 
     return (
         <View style={styles.authContainer}>

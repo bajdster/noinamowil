@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import supabase from '../../lib/supabaseClient';
 import RecipeListItem from '../components/recipeListItem';
 import { DrinkContext } from '../../store/drink-context';
+import { loadSession } from '../../lib/recipeActions';
 
 const Favorites = () => {
   const [session, setSession] = useState(null);
@@ -10,26 +11,36 @@ const Favorites = () => {
   const [refreshing, setRefreshing] = useState(false);
   const ctx = useContext(DrinkContext)
 
+
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) {
-        Alert.alert(error.message);
-        return;
-      }
-      setSession(session);
+    const loadSessionFromAsyncStorage = async () => {
+      const session = await loadSession()
+      setSession(session)
     };
 
-    checkSession();
+    loadSessionFromAsyncStorage();
+}, []);
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+  // useEffect(() => {
+  //   const checkSession = async () => {
+  //     const { data: { session }, error } = await supabase.auth.getSession();
+  //     if (error) {
+  //       Alert.alert(error.message);
+  //       return;
+  //     }
+  //     setSession(session);
+  //   };
 
-    return () => {
-      authListener?.subscription?.unsubscribe();
-    };
-  }, []);
+  //   checkSession();
+
+  //   const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+  //     setSession(session);
+  //   });
+
+  //   return () => {
+  //     authListener?.subscription?.unsubscribe();
+  //   };
+  // }, []);
 
   const getFavoritesDrinks = async () => {
     if (!session) return;

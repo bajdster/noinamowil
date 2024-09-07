@@ -3,6 +3,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { Link, router } from 'expo-router';
 import supabase from '../../lib/supabaseClient';
 import { DrinkContext } from '../../store/drink-context';
+import { loadSession } from '../../lib/recipeActions';
 
 const RecipeListItem = ({ itemData }) => {
     const categories = itemData.item.category ? itemData.item.category.join(', ') : '';
@@ -10,28 +11,37 @@ const RecipeListItem = ({ itemData }) => {
     const [session, setSession] = useState(null);
     const ctx = useContext(DrinkContext)
     const [isItemFavorite, setIsItemFavorite] = useState(false)
-  
+
     useEffect(() => {
-        const checkSession = async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            if (error) {
-                Alert.alert(error.message);
-                return;
-            }
-            setSession(session);
+        const loadSessionFromAsyncStorage = async () => {
+          const session = await loadSession()
+          setSession(session)
         };
     
-        checkSession();
-    
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-    
-        });
-    
-        return () => {
-            authListener?.subscription?.unsubscribe();
-        };
+        loadSessionFromAsyncStorage();
     }, []);
+  
+    // useEffect(() => {
+    //     const checkSession = async () => {
+    //         const { data: { session }, error } = await supabase.auth.getSession();
+    //         if (error) {
+    //             Alert.alert(error.message);
+    //             return;
+    //         }
+    //         setSession(session);
+    //     };
+    
+    //     checkSession();
+    
+    //     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+    //         setSession(session);
+    
+    //     });
+    
+    //     return () => {
+    //         authListener?.subscription?.unsubscribe();
+    //     };
+    // }, []);
 
     useEffect(()=>
     {

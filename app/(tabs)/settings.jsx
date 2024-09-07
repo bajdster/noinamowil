@@ -1,68 +1,69 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native'
-import React, {useEffect, useState} from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import supabase from '../../lib/supabaseClient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import { loadSession } from '../../lib/recipeActions';
 
 const Settings = () => {
 
-    const logout = async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            Alert.alert(error.message);
-        } else {
-            Alert.alert('Wylogowano pomyślnie');
-            router.replace('/');
-        }
+  const logout = async () => {
+    try {
+      // Wylogowanie z Supabase
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        Alert.alert('Error', error.message);
+        return;
+      }
+      
+      // Usunięcie sesji z AsyncStorage
+      await AsyncStorage.removeItem('session');
+      
+      // Potwierdzenie wylogowania
+      Alert.alert('Wylogowano pomyślnie');
+      
+      // Przekierowanie do strony logowania
+      router.replace('/');
+    } catch (error) {
+      Alert.alert('Error', 'An error occurred while logging out.');
+    }
+  };
+
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const loadSessionFromAsyncStorage = async () => {
+      const session = await loadSession();
+      setSession(session);
     };
 
-    const [session, setSession] = useState(null);
-  
-    useEffect(() => {
-        const checkSession = async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            if (error) {
-                Alert.alert(error.message);
-                return;
-            }
-            setSession(session);
-        };
-    
-        checkSession();
-    
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-    
-        });
-    
-        return () => {
-            authListener?.subscription?.unsubscribe();
-        };
-    }, []);
+    loadSessionFromAsyncStorage();
+  }, []);
 
-    return (
-        <View style={styles.settingsContainer}>
-            <View style={styles.userInfoContainer}>
-                <Image
-                    source={require("../../assets/icons/profile.png")} // Przykładowy obrazek użytkownika
-                    style={styles.userImage}
-                />
-                {session && session.user && (
-                    <>
-                        <Text style={styles.userEmail}>{session.user.email}</Text>
-                        <Text style={styles.userInfoText}>Konto utworzone: {new Date(session.user.created_at).toLocaleDateString()}</Text>
-                        <Text style={styles.userInfoText}>Ostatnio zalogowany: {new Date(session.user.last_sign_in_at).toLocaleDateString()}</Text>
-                    </>
-                )}
-            </View>
-            <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-                <Text style={styles.logoutButtonText}>Wyloguj</Text>
-                <Image source={require('../../assets/icons/logout.png')} style={styles.logoutImage}/>
-            </TouchableOpacity>
-        </View>
-    )
+  return (
+    <View style={styles.settingsContainer}>
+      <View style={styles.userInfoContainer}>
+        <Image
+          source={require("../../assets/icons/profile.png")}
+          style={styles.userImage}
+        />
+        {session && session.user && (
+          <>
+            <Text style={styles.userEmail}>{session.user.email}</Text>
+            <Text style={styles.userInfoText}>Konto utworzone: {new Date(session.user.created_at).toLocaleDateString()}</Text>
+            <Text style={styles.userInfoText}>Ostatnio zalogowany: {new Date(session.user.last_sign_in_at).toLocaleDateString()}</Text>
+          </>
+        )}
+      </View>
+      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+        <Text style={styles.logoutButtonText}>Wyloguj</Text>
+        <Image source={require('../../assets/icons/logout.png')} style={styles.logoutImage} />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
-export default Settings
+export default Settings;
 
 const styles = StyleSheet.create({
 
