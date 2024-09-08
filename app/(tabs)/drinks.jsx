@@ -8,12 +8,14 @@ import { DrinkContext } from '../../store/drink-context'
 import FilterInput from '../components/filterInput'
 import { Picker } from '@react-native-picker/picker';
 import { useLocalSearchParams } from 'expo-router'
+import { loadSession } from '../../lib/recipeActions';
 
 const Drinks = () => {
   const {paramsCategory} = useLocalSearchParams()
   const drinksCtx = useContext(DrinkContext)
   const [filteredText, setFilteredText] = useState('')
   const [drinks, setDrinks] = useState([])
+  const [session, setSession] = useState(null);
   const catagories = ["klasyczny", "orzeźwiający", "lekki", "bezalkoholowy", "egzotyczny", "słodki"]
   const alkos = ["rum", "wódka", "whisky", "gin", "wino białe", "wino czerwone", "aperol", "piwo", "likier", "tequila", "prosecco"]
 
@@ -21,6 +23,38 @@ const Drinks = () => {
   const [selectedAlko, setSelectedAlko] = useState("wszystkie");
   const [refreshing, setRefreshing] = useState(false)
 
+
+  useEffect(() => {
+    const loadSessionFromAsyncStorage = async () => {
+      const session = await loadSession()
+      setSession(session)
+    };
+
+    loadSessionFromAsyncStorage();
+}, []);
+
+  const getFavoritesDrinks = async () => {
+    if (!session) return;
+
+    const { data, error } = await supabase
+      .from('drinks')
+      .select(`
+        *,
+        favorites!inner(drink_id)
+      `)
+      .eq('favorites.user_id', session.user.id);
+
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+        drinksCtx.fetchFavoritesDrinks(data)
+    }
+  };
+
+  useEffect(() => {
+    getFavoritesDrinks();
+  }, [session]);
+  
   // Set category and alcohol type from params
   useEffect(() => {
     if(paramsCategory && catagories.includes(paramsCategory)) {
