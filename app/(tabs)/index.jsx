@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, ScrollView, ImageBackground, Image } from 'react-native'
-import React, {useEffect, useState} from 'react'
-import DrinkSlider from '../components/drinkSlider'
+import { View, Text, StyleSheet, ScrollView, ImageBackground, Image, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import DrinkSlider from '../components/drinkSlider';
 import { useFonts, Bangers_400Regular } from '@expo-google-fonts/bangers';
 import CustomButton from '../components/customButton';
 import CategoriesSlider from '../components/categoriesSlider';
@@ -9,96 +9,57 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import supabase from '../../lib/supabaseClient';
 import { loadSession } from '../../lib/recipeActions';
 
-
 const Home = () => {
-
   const [session, setSession] = useState(null);
 
-  // let [fontsLoaded] = useFonts({
-  //   Bangers_400Regular,
-  // });
-
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
+  let [fontsLoaded] = useFonts({
+    Bangers_400Regular,
+  });
 
   useEffect(() => {
     const loadSessionFromAsyncStorage = async () => {
-      const session = await loadSession()
-      setSession(session)
+      const session = await loadSession();
+      setSession(session);
     };
 
     loadSessionFromAsyncStorage();
-}, []);
-
-
-//   useEffect(() => {
-//     const checkSession = async () => {
-//         const { data: { session }, error } = await supabase.auth.getSession();
-//         if (error) {
-//             Alert.alert(error.message);
-//             return;
-//         }
-//         setSession(session);
-//     };
-
-//     checkSession();
-
-//     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-//         setSession(session);
-
-//     });
-
-//     return () => {
-//         authListener?.subscription?.unsubscribe();
-//     };
-// }, []);
-
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
+      <ScrollView style={styles.mainContainer} contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.welcomeUser}>
+          <View style={styles.mainBanner}>
+            <Image source={require('../../assets/icons/profile.png')} style={styles.userImage} />
+            <Text style={styles.welcomeUserText}>Witaj</Text>
+          </View>
 
-    <View style={styles.welcomeUser}>
-      <View style={styles.mainBanner}>
-        <Image
-                source={require("../../assets/icons/profile.png")}
-                style={styles.userImage}
-          />
-        <Text style={styles.welcomeUserText}>Witaj</Text>
-      </View>
-
-      {session && session.user && <Text>{session.user.email}</Text>}
-    </View>
-
-
-    <View style={styles.coctailMenu}>
-            <ImageBackground source={require("../../assets/images/watermelon.png")} style={styles.backgroundImage}>
-
-            </ImageBackground>
-
-
-        <View style={styles.welcomeTextContainer}>
-            <Text style={styles.welcomeText}>
-              Miksuj dowolnie swoje ulubione <Text style={styles.highlight}>koktaje</Text>
-            </Text>
-            {/* <Text style={styles.description}>Tysiące inspiracji na pyszne drinki</Text> */}
-            <CustomButton title="Znajdź przepisy" />
+          {session && session.user && <Text>{session.user.email}</Text>}
         </View>
 
-    </View>
-        
+        <View style={styles.coctailMenu}>
+          <ImageBackground source={require('../../assets/images/watermelon.png')} style={styles.backgroundImage} />
+          <View style={styles.welcomeTextContainer}>
+            {fontsLoaded ? (
+              <Text style={styles.welcomeText}>
+                Miksuj dowolnie swoje ulubione <Text style={styles.highlight}>koktaje</Text>
+              </Text>
+            ) : (
+              <ActivityIndicator size="large" color="#0000ff" />
+            )}
+            <CustomButton title="Znajdź przepisy" />
+          </View>
+        </View>
 
-      <DrinkSlider />
-      <CategoriesSlider />
-      <EventsSlider/>
-  
-    </ScrollView>
+        <DrinkSlider />
+        <CategoriesSlider />
+        <EventsSlider />
+      </ScrollView>
     </GestureHandlerRootView>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
 
 const styles = StyleSheet.create({
   mainContainer: {
