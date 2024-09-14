@@ -1,127 +1,78 @@
 import { Image, StyleSheet, Text, View, Platform, TouchableOpacity } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
-import { Link, router } from 'expo-router';
+import React, { useContext, useState, useEffect } from 'react';
+import { router } from 'expo-router';
 import supabase from '../../lib/supabaseClient';
 import { DrinkContext } from '../../store/drink-context';
 import { loadSession } from '../../lib/recipeActions';
 
 const RecipeListItem = ({ itemData }) => {
     const categories = itemData.item.category ? itemData.item.category.join(', ') : '';
-
     const [session, setSession] = useState(null);
-    const ctx = useContext(DrinkContext)
-    const [isItemFavorite, setIsItemFavorite] = useState(false)
+    const ctx = useContext(DrinkContext);
 
     useEffect(() => {
         const loadSessionFromAsyncStorage = async () => {
-          const session = await loadSession()
-          setSession(session)
+            const session = await loadSession();
+            setSession(session);
         };
-    
         loadSessionFromAsyncStorage();
     }, []);
-  
-    // useEffect(() => {
-    //     const checkSession = async () => {
-    //         const { data: { session }, error } = await supabase.auth.getSession();
-    //         if (error) {
-    //             Alert.alert(error.message);
-    //             return;
-    //         }
-    //         setSession(session);
-    //     };
-    
-    //     checkSession();
-    
-    //     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-    //         setSession(session);
-    
-    //     });
-    
-    //     return () => {
-    //         authListener?.subscription?.unsubscribe();
-    //     };
-    // }, []);
 
-    useEffect(()=>
-    {
-        for(const item of ctx.favDrinks)
-        {
-            if(item.id === itemData.item.id)
-            {
-                setIsItemFavorite(true)
-            }
-        }
-    }, [ctx.favDrinks])
+    // Dynamiczne sprawdzanie, czy drink jest w ulubionych na podstawie kontekstu
+    const isItemFavorite = ctx.favDrinks.some(favDrink => favDrink.id === itemData.item.id);
 
-    
-        const openDrinkDetails = () =>
-        {
-            router.push({pathname:"/drinkDetail/drink", params:{title: itemData.item.title, id: itemData.item.id}})
-        }
-        
-        //okodować to aby ikona ulubione była po wejściuw w szczegóły drinka
-        const bookmarkHandler = async () => {
-            if (isItemFavorite) {
-                // Usuń z ulubionych
-                const { data, error } = await supabase
-                    .from('favorites')
-                    .delete()
-                    .eq('user_id', session.user.id)
-                    .eq('drink_id', itemData.item.id);
-        
-                if (error) {
-                    console.error("Error removing favorite:", error);
-                } else {
-                    ctx.removeFavDrink(itemData.item.id); // Usuń z kontekstu
-                    setIsItemFavorite(false); // Zaktualizuj stan lokalny
-                }
+    const openDrinkDetails = () => {
+        router.push({ pathname: "/drinkDetail/drink", params: { title: itemData.item.title, id: itemData.item.id } });
+    };
+
+    const bookmarkHandler = async () => {
+        if (isItemFavorite) {
+            // Usuń z ulubionych
+            const { error } = await supabase
+                .from('favorites')
+                .delete()
+                .eq('user_id', session.user.id)
+                .eq('drink_id', itemData.item.id);
+
+            if (error) {
+                console.error("Error removing favorite:", error);
             } else {
-                // Dodaj do ulubionych
-                const { data, error } = await supabase
-                    .from('favorites')
-                    .insert([
-                        { user_id: session.user.id, drink_id: itemData.item.id },
-                    ]);
-        
-                if (error) {
-                    console.error("Error adding favorite:", error);
-                } else {
-                    ctx.addFavDrink(itemData.item); // Dodaj do kontekstu
-                    setIsItemFavorite(true); // Zaktualizuj stan lokalny
-                }
+                ctx.removeFavDrink(itemData.item.id); // Zaktualizuj stan w kontekście
+            }
+        } else {
+            // Dodaj do ulubionych
+            const { error } = await supabase
+                .from('favorites')
+                .insert([{ user_id: session.user.id, drink_id: itemData.item.id }]);
+
+            if (error) {
+                console.error("Error adding favorite:", error);
+            } else {
+                ctx.addFavDrink(itemData.item); // Zaktualizuj stan w kontekście
             }
         }
-            
-    return (
-      <TouchableOpacity onPress={openDrinkDetails}>
-        <View style={styles.listItemContainer}>
-            <View style={styles.imageContainer}>
-                <Image source={{ uri: itemData.item.image_url }} style={{ width: 60, height: 60 }} />
-            </View>
+    };
 
-            <View style={styles.textContainer}>
-                <View>
-                    {itemData && <Text style={styles.title}>{itemData.item.title}</Text>}
+    return (
+        <TouchableOpacity onPress={openDrinkDetails}>
+            <View style={styles.listItemContainer}>
+                <View style={styles.imageContainer}>
+                    <Image source={{ uri: itemData.item.image_url }} style={{ width: 60, height: 60 }} />
                 </View>
-                <View style={styles.details}>
-                    {categories ? (
-                        <Text style={styles.categories}>Kategoria: {categories}</Text>
-                    ) : (
-                        <Text style={styles.categories}>Kategoria: -</Text>
-                    )}
-                </View>
-                <View style={styles.details}>
-                    <Text></Text>
+
+                <View style={styles.textContainer}>
+                    <Text style={styles.title}>{itemData.item.title}</Text>
+                    <Text style={styles.categories}>Kategoria: {categories || '-'}</Text>
                     <Text style={styles.categories}>Główny alkohol: {itemData.item.main_alcohol}</Text>
                 </View>
 
+                <TouchableOpacity onPress={bookmarkHandler} style={styles.bookmarkContainer}>
+                    <Image
+                        source={require("../../assets/icons/bookmark.png")}
+                        style={[styles.bookmark, isItemFavorite && { tintColor: 'black' }]}
+                    />
+                </TouchableOpacity>
             </View>
-            
-            <TouchableOpacity onPress={bookmarkHandler} style={styles.bookmarkContainer}>
-                    <Image source={require("../../assets/icons/bookmark.png")} style={[styles.bookmark, isItemFavorite && {tintColor:'black'}]}/>
-            </TouchableOpacity>
-        </View>
         </TouchableOpacity>
     );
 };
@@ -149,16 +100,16 @@ const styles = StyleSheet.create({
             },
         }),
     },
-    imageContainer:{
-        flex:1
+    imageContainer: {
+        flex: 1,
     },
     textContainer: {
         marginLeft: 10,
-        flex:3
+        flex: 3,
     },
-    bookmarkContainer:{
-        flex:1,
-        alignItems:'center'
+    bookmarkContainer: {
+        flex: 1,
+        alignItems: 'center',
     },
     title: {
         fontWeight: 'bold',
@@ -168,12 +119,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'gray',
     },
-    details:{
-      flexDirection:'row'
+    bookmark: {
+        width: 25,
+        height: 25,
+        tintColor: 'lightgray',
     },
-    bookmark:{
-        width:25,
-        height:25,
-        tintColor:'lightgray',
-    }
 });
