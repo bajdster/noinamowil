@@ -22,6 +22,7 @@ const Drinks = () => {
   const [selectedCategory, setSelectedCategory] = useState("wszystkie");
   const [selectedAlko, setSelectedAlko] = useState("wszystkie");
   const [refreshing, setRefreshing] = useState(false)
+  const [sortOrder, setSortOrder] = useState('asc'); 
 
 
   useEffect(() => {
@@ -93,6 +94,27 @@ const Drinks = () => {
     setDrinks(drinksCtx.drinks.data)
   }
 
+  function changeSortingAlphabetically() {
+    setSortOrder((prevSortOrder) => {
+      const newSortOrder = prevSortOrder === 'asc' ? 'desc' : 'asc';
+      
+      // Aktualizacja listy drinków z nowym porządkiem sortowania
+      let sortedDrinks = [...drinks]; // Kopiujemy bieżącą listę drinków
+  
+      sortedDrinks = sortedDrinks.sort((a, b) => {
+        if (newSortOrder === 'asc') {
+          return a.title.localeCompare(b.title);
+        } else {
+          return b.title.localeCompare(a.title);
+        }
+      });
+  
+      // Aktualizacja stanu z posortowaną listą drinków
+      setDrinks(sortedDrinks);
+      return newSortOrder; // Zwracamy nowy stan sortowania
+    });
+  }
+
   // Apply filters
   useEffect(() => {
     if (!drinksCtx.drinks || !drinksCtx.drinks.data) return;
@@ -110,8 +132,18 @@ const Drinks = () => {
       filteredDrinks = filteredDrinks.filter(drink => drink.main_alcohol === selectedAlko.toLowerCase());
     }
 
+    if (sortOrder) {
+      filteredDrinks = filteredDrinks.sort((a, b) => {
+        if (sortOrder === 'asc') {
+          return a.title.localeCompare(b.title);
+        } else if (sortOrder === 'desc') {
+          return b.title.localeCompare(a.title);
+        }
+      });
+    }
+
     setDrinks(filteredDrinks);
-  }, [filteredText, selectedCategory, selectedAlko, drinksCtx.drinks.data]);
+  }, [filteredText, selectedCategory, selectedAlko, drinksCtx.drinks.data, sortOrder]);
 
   return (
     <View style={styles.drinksContainer}>
@@ -150,6 +182,11 @@ const Drinks = () => {
         <Text style={styles.drinkListTitle}>Lista drinków {drinks && drinks.length}</Text>
         {(selectedAlko !=='wszystkie' || selectedCategory !=="wszystkie") &&<TouchableOpacity style={styles.clearFiltersButton} onPress={clearFilter}><Text style={{color:'white'}}>Usuń filtry</Text></TouchableOpacity>}
       </View>
+      <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', height:30, alignItems:'center', marginVertical:4}}>
+          <TouchableOpacity style={styles.sortAlphabeticallyButton} onPress={changeSortingAlphabetically}>
+            <Text>Sortuj: {sortOrder === 'desc' ?'A-Z': 'Z-A'}</Text>
+          </TouchableOpacity>
+      </View>
       {drinks ? <FlatList data={drinks} keyExtractor={(item, index) => item.id} renderItem={(itemData)=> <RecipeListItem itemData={itemData}/>} style={styles.recipeList} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}/> : 
       <View>
         <Text>Loading...</Text>
@@ -182,5 +219,11 @@ const styles = StyleSheet.create({
     backgroundColor:'#f76b8a',
     padding:6,
     borderRadius:10
+  },
+  sortAlphabeticallyButton:{
+    backgroundColor:'lightgray',
+    paddingHorizontal:8,
+    paddingVertical: 6,
+    borderRadius:6
   }
 })
